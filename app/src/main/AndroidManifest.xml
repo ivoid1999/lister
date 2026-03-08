@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.zirohill.lister">
+
+    <!-- Permission to post notifications (required for Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Permission to receive BOOT_COMPLETED broadcast for alarm re-registration -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Permission to schedule exact alarms (required for Android 12+) -->
+    <!--
+         Specify maxSdkVersion="32" to declare permission only for API 31 and 32.
+         On Android 13 (API 33) and higher, canScheduleExactAlarms() must be checked at runtime.
+    -->
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32"
+        tools:ignore="ProtectedPermissions" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/lister_icon"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/lister_icon_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.lister"
+        android:name=".ListerApplication">
+
+        <!-- Main launcher activity -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.lister">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- BroadcastReceiver to handle the daily alarm and show notification -->
+        <receiver
+            android:name=".AlarmReceiver"
+            android:exported="true" />
+
+        <!-- BroadcastReceiver to re-register alarms on device reboot -->
+        <receiver
+            android:name=".BootReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>
